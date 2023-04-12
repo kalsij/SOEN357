@@ -117,7 +117,7 @@ const SignIn = () => {
 						</Button>
 						<br></br>
 						<Form.Text className="text-muted">
-							New to ElevateNet?{" "}
+							New to Dresserly?{" "}
 							<a href="/JoinNow" className="join">
 								Create an account
 							</a>
