@@ -6,18 +6,20 @@ import Home from "./Home";
 import NavbarFun from "./Nav.js";
 import { Routes, Route } from "react-router-dom";
 import { UserAuthContextProvider } from "./UserAuthContext";
+import UploadItemPage from "./Upload pages/UploadItemPage";
 
 function App() {
-	return (
-		<UserAuthContextProvider>
-			<NavbarFun />
-			<Routes>
-				<Route path="/" element={<Home />} />
-				<Route path="/SignIn" element={<SignIn />} />
-				<Route path="/SignUp" element={<SignUp />} />
-			</Routes>
-		</UserAuthContextProvider>
-	);
+  return (
+    <UserAuthContextProvider>
+      <NavbarFun />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/SignIn" element={<SignIn />} />
+        <Route path="/SignUp" element={<SignUp />} />
+        <Route path="/UploadItemPage" element={<UploadItemPage />} />
+      </Routes>
+    </UserAuthContextProvider>
+  );
 }
 
 export default App;
