@@ -9,20 +9,27 @@ import { onAuthStateChanged } from "firebase/auth";
 const ClothesLibrary = () => {
   const [clothes, setClothes] = useState([]);
   const [pristineClothes, setPristineClothes] = useState([]);
+  const [firstRender, setFirstRender] = useState(true);
+  const [filter, setFilter] = useState(false);
+  const [fetched, setFetched] = useState(false);
 
   const classes = useStyles();
 
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredClothes = pristineClothes.filter(
-    (clothe) =>
-      clothe.itemName &&
-      clothe.itemName.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredClothes = (value) => {
+    return pristineClothes.filter((clothe) => {
+      return (
+        clothe.itemName &&
+        clothe.itemName.toLowerCase().includes(value.toLowerCase())
+      );
+    });
+  };
 
   const fetchClothes = async () => {
-    if (auth?.currentUser?.email) {
-      console.log("hello");
+    console.log(pristineClothes);
+    if (pristineClothes.length === 0 && !fetched) {
+      setFetched(true);
       const clothingCollection = collection(
         db,
         "clothes",
@@ -44,7 +51,12 @@ const ClothesLibrary = () => {
 
   function handleSearchQueryChange(event) {
     setSearchQuery(event.target.value);
-    setClothes(filteredClothes);
+    if (event.target.value.trim() === 0) {
+      setClothes(pristineClothes);
+    } else {
+      setClothes(filteredClothes(event.target.value));
+    }
+    console.log(filteredClothes);
   }
 
   useEffect(() => {
@@ -53,7 +65,7 @@ const ClothesLibrary = () => {
         fetchClothes();
       }
     });
-  }, []);
+  }, [clothes]);
 
   return (
     <div className="flex flex-col justify-center items-center">
