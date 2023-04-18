@@ -27,7 +27,6 @@ const ClothesLibrary = () => {
   };
 
   const fetchClothes = async () => {
-    console.log(pristineClothes);
     if (pristineClothes.length === 0 && !fetched) {
       setFetched(true);
       const clothingCollection = collection(
@@ -56,7 +55,6 @@ const ClothesLibrary = () => {
     } else {
       setClothes(filteredClothes(event.target.value));
     }
-    console.log(filteredClothes);
   }
 
   useEffect(() => {
