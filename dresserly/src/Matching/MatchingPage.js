@@ -5,7 +5,6 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../firebase";
 import { collection, query, getDocs, doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase";
-import CloseIcon from "@mui/icons-material/Close";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackwardIosIcon from "@mui/icons-material/ArrowBackIos";
 
@@ -16,10 +15,10 @@ export default function MatchingPage() {
   const [tags, setTags] = useState([]);
   const [topClothes, setTopClothes] = useState([]);
   const [bottomClothes, setBottomClothes] = useState([]);
+  const [pristineTopClothes, setPristineTopClothes] = useState([]);
+  const [pristineBottomClothes, setPristineBottomClothes] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [selectedTopClothes, setSelectedTopClothes] = useState([]);
-  const [selectedBottomClothes, setSelectedBottomClothes] = useState([]);
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedStyle, setSelectedStyle] = useState(null);
 
   const styles = ["Casual", "Formal", "Cocktail", "Workout"];
 
@@ -47,6 +46,8 @@ export default function MatchingPage() {
     });
     setTopClothes(topDocs);
     setBottomClothes(bottomDocs);
+    setPristineBottomClothes(bottomDocs);
+    setPristineTopClothes(topDocs);
   };
 
   const fetchTags = async () => {
@@ -101,6 +102,67 @@ export default function MatchingPage() {
     }
   }, [currentUser]);
 
+  const changeStyle = () => {
+    let tempStyle = "";
+    document.getElementsByName("styleCheckbox").forEach((checkbox) => {
+      if (checkbox.checked) {
+        setSelectedStyle(checkbox.id);
+        tempStyle = checkbox.id;
+      }
+    });
+    setTopClothes(
+      pristineTopClothes.filter(
+        (topClothe) =>
+          topClothe.tags?.some((tag) =>
+            selectedTags.length > 0 ? selectedTags.includes(tag.name) : true
+          ) && topClothe.style === tempStyle
+      )
+    );
+    setBottomClothes(
+      pristineBottomClothes.filter(
+        (bottomClothe) =>
+          bottomClothe.tags?.some((tag) =>
+            selectedTags.length > 0 ? selectedTags.includes(tag.name) : true
+          ) && bottomClothe.style === tempStyle
+      )
+    );
+    setTimeout(console.log(topClothes), 1000);
+    setTimeout(console.log(bottomClothes), 1000);
+    setCurrentTopIndex(0);
+    setCurrentBottomIndex(0);
+  };
+
+  const changeFilters = () => {
+    setSelectedTags([]);
+    let tempTags = [];
+    document.getElementsByName("tagCheckbox").forEach((checkbox) => {
+      if (checkbox.checked) {
+        setSelectedTags((oldTags) => [...oldTags, checkbox.id]);
+        tempTags = [...tempTags, checkbox.id];
+      }
+    });
+    setTopClothes(
+      pristineTopClothes.filter(
+        (topClothe) =>
+          topClothe.tags?.some((tag) =>
+            tempTags.length > 0 ? tempTags.includes(tag.name) : true
+          ) && topClothe.style === selectedStyle
+      )
+    );
+    setBottomClothes(
+      pristineBottomClothes.filter(
+        (bottomClothe) =>
+          bottomClothe?.tags?.some((tag) =>
+            tempTags.length > 0 ? tempTags.includes(tag.name) : true
+          ) && bottomClothe.style === selectedStyle
+      )
+    );
+    setCurrentTopIndex(0);
+    setCurrentBottomIndex(0);
+    setTimeout(console.log(topClothes), 1000);
+    setTimeout(console.log(bottomClothes), 1000);
+  };
+
   return (
     <div>
       <h1 className="image-gallery-title">DRESSERLY</h1>
@@ -110,13 +172,35 @@ export default function MatchingPage() {
         </div>
         <div className="image-gallery-middle">
           <h4 className="image-gallery-middle-titles">STYLE</h4>
-          {styles.map((style) => (
-            <p>{style}</p>
+          {styles.map((style, index) => (
+            <div key={index}>
+              <input
+                type="radio"
+                key={index}
+                id={style}
+                name="styleCheckbox"
+                onChange={changeStyle}
+              />
+              <label key={`style ${index}`} htmlFor={style}>
+                {style}
+              </label>
+            </div>
           ))}
 
           <h4 className="image-gallery-middle-titles">TAGS</h4>
-          {tags?.map((tag) => (
-            <p>{tag.name}</p>
+          {tags?.map((tag, index) => (
+            <div key={index}>
+              <input
+                type="checkbox"
+                id={tag.name}
+                key={index}
+                name="tagCheckbox"
+                onChange={changeFilters}
+              />
+              <label key={`tags ${index}`} htmlFor={tag.name}>
+                {tag.name}
+              </label>
+            </div>
           ))}
         </div>
         <div className="image-gallery-right">
