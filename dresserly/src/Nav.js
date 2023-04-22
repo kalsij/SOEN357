@@ -30,33 +30,52 @@ function NavbarFun() {
             </>
           )}
           <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
-            <Nav className="ms-auto"></Nav>
-            <Nav>
-              {userr && (
-                <>
-                  <Nav>
-                    <button onClick={handleLogout} className="logout_button">
-                      Sign Out
-                    </button>
-                  </Nav>
-                </>
-              )}
-              {!userr && (
-                <>
-                  <Nav>
-                    <Link to="/UploadItemPage">Upload an item</Link>
-                  </Nav>
-                  <Nav>
-                    <Link to="/SignIn">Sign In</Link>
-                  </Nav>
-                  <Nav>
-                    <Link to="/SignUp">Sign Up</Link>
-                  </Nav>
-                </>
-              )}
-            </Nav>
-          </Navbar.Collapse>
+          <Nav className="ms-auto"></Nav>
+          <Nav className="flex flex-row justify-between">
+            {userr && (
+              <>
+                <Nav className="flex mr-2">
+                  <button onClick={handleLogout} className="text-indigo-700">
+                    Sign Out
+                  </button>
+                </Nav>
+                <Nav className="flex mr-2">
+                  <button
+                    onClick={() => navigate("/UploadItemPage")}
+                    className="text-indigo-700"
+                  >
+                    Upload Item
+                  </button>
+                </Nav>
+                <Nav className="flex mr-2">
+                  <button
+                    onClick={() => navigate("/ClothesLibrary")}
+                    className="text-indigo-700"
+                  >
+                    Item Library
+                  </button>
+                </Nav>
+                <Nav className="flex mr-2">
+                  <button
+                    onClick={() => navigate("/Match")}
+                    className="text-indigo-700"
+                  >
+                    Matching Page
+                  </button>
+                </Nav>
+              </>
+            )}
+            {!userr && (
+              <>
+                <Nav className="flex-items mr-2">
+                  <Link to="/SignIn">Sign In</Link>
+                </Nav>
+                <Nav className="flex">
+                  <Link to="/SignUp">Sign Up</Link>
+                </Nav>
+              </>
+            )}
+          </Nav>
         </Container>
       </Navbar>
 
